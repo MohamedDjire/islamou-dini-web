@@ -1,0 +1,14 @@
+export { default as HomePage } from './HomePage';
+export { default as CatalogPage } from './CatalogPage';
+export { default as FormationDetailPage } from './FormationDetailPage';
+export { default as ReelsPage } from './ReelsPage';
+export { default as FeedPage } from './FeedPage';
+export { default as CommunitiesPage } from './CommunitiesPage';
+export { default as CommunityPage } from './CommunityPage';
+export { default as GroupPage } from './GroupPage';
+export { default as LivePage } from './LivePage';
+export { default as ProfilePage } from './ProfilePage';
+export { default as SettingsPage } from './SettingsPage';
+export { default as AdminPage } from './AdminPage';
+export { default as LoginPage } from './LoginPage';
+export { default as RegisterPage } from './RegisterPage';
