@@ -1,68 +1,298 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* Couleurs de base - Theme clair islamique */
+    --background: #fdf8f3;
+    --foreground: #1f2937;
+    
+    --card: #ffffff;
+    --card-foreground: #1f2937;
+    
+    --primary: #047857;
+    --primary-foreground: #ffffff;
+    
+    --secondary: #f5ebe0;
+    --secondary-foreground: #1f2937;
+    
+    --accent: #d4af37;
+    --accent-foreground: #1f2937;
+    
+    --muted: #f5ebe0;
+    --muted-foreground: #64748b;
+    
+    --border: #e6ccb2;
+    --input: #e6ccb2;
+    --ring: #047857;
+    
+    --radius: 0.75rem;
+    
+    /* Couleurs semantiques */
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
   }
-  a:hover {
-    color: #747bff;
+
+  * {
+    border-color: var(--border);
   }
-  button {
-    background-color: #f9f9f9;
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Scrollbar personnalisee */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--muted);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b08968;
+  }
+
+  /* Selection de texte */
+  ::selection {
+    background-color: #047857;
+    color: white;
+  }
+}
+
+@layer components {
+  /* Boutons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-primary-foreground hover:bg-emerald-800 focus:ring-primary;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary text-secondary-foreground hover:bg-cream-300 focus:ring-secondary;
+  }
+
+  .btn-outline {
+    @apply btn border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground focus:ring-primary;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-foreground hover:bg-secondary focus:ring-secondary;
+  }
+
+  .btn-accent {
+    @apply btn bg-accent text-accent-foreground hover:bg-gold-600 focus:ring-accent;
+  }
+
+  /* Tailles de boutons */
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+
+  .btn-md {
+    @apply px-4 py-2 text-base;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-lg;
+  }
+
+  /* Inputs */
+  .input {
+    @apply w-full rounded-lg border border-input bg-white px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200;
+  }
+
+  .input-error {
+    @apply border-error focus:border-error focus:ring-error/20;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-card rounded-xl border border-border/50 shadow-soft overflow-hidden;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-300 hover:shadow-elevated hover:-translate-y-1;
+  }
+
+  /* Labels */
+  .label {
+    @apply block text-sm font-medium text-foreground mb-1.5;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply badge bg-primary/10 text-primary;
+  }
+
+  .badge-accent {
+    @apply badge bg-accent/20 text-gold-700;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 text-green-700;
+  }
+
+  .badge-warning {
+    @apply badge bg-amber-100 text-amber-700;
+  }
+
+  .badge-error {
+    @apply badge bg-red-100 text-red-700;
+  }
+
+  /* Liens */
+  .link {
+    @apply text-primary hover:text-emerald-800 underline-offset-4 hover:underline transition-colors;
+  }
+
+  /* Texte arabe */
+  .arabic {
+    @apply font-arabic text-right leading-loose;
+  }
+
+  /* Container responsive */
+  .container-app {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Section spacing */
+  .section {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  /* Motif islamique en fond */
+  .islamic-pattern-bg {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23047857' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Gradient overlay */
+  .gradient-overlay {
+    @apply absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60;
+  }
+
+  /* Avatar sizes */
+  .avatar-sm {
+    @apply w-8 h-8 rounded-full object-cover;
+  }
+
+  .avatar-md {
+    @apply w-10 h-10 rounded-full object-cover;
+  }
+
+  .avatar-lg {
+    @apply w-14 h-14 rounded-full object-cover;
+  }
+
+  .avatar-xl {
+    @apply w-20 h-20 rounded-full object-cover;
+  }
+
+  /* Skeleton loading */
+  .skeleton {
+    @apply bg-muted animate-pulse rounded;
+  }
+
+  /* Focus visible */
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+}
+
+@layer utilities {
+  /* Text balance pour les titres */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Ligne de separation decorative */
+  .divider-islamic {
+    @apply relative flex items-center justify-center py-4;
+  }
+
+  .divider-islamic::before,
+  .divider-islamic::after {
+    content: '';
+    @apply flex-1 h-px bg-border;
+  }
+
+  .divider-islamic::before {
+    @apply mr-4;
+  }
+
+  .divider-islamic::after {
+    @apply ml-4;
+  }
+
+  /* Effet de brillance pour les cartes */
+  .shine {
+    @apply relative overflow-hidden;
+  }
+
+  .shine::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent;
+    animation: shine 2s infinite;
+  }
+
+  @keyframes shine {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Hide scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Line clamp */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
