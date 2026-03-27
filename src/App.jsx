@@ -1,91 +1,90 @@
-import { useState, useEffect } from 'react'
-import { AuthProvider } from './contexts/AuthContext'
-import { healthCheck } from './services/api'
-import './App.css'
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import Header from './components/layout/Header';
+import Sidebar from './components/layout/Sidebar';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import CatalogPage from './pages/CatalogPage';
+import FormationDetailPage from './pages/FormationDetailPage';
+import CommunitiesPage from './pages/CommunitiesPage';
+import CommunityPage from './pages/CommunityPage';
+import ReelsPage from './pages/ReelsPage';
+import FeedPage from './pages/FeedPage';
+import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
+import AdminPage from './pages/AdminPage';
+
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return <div className="flex items-center justify-center h-screen">Chargement...</div>;
+  }
+  
+  return user ? children : <Navigate to="/login" />;
+}
+
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return <div className="flex items-center justify-center h-screen">Chargement...</div>;
+  }
+  
+  return user?.is_staff ? children : <Navigate to="/" />;
+}
+
+function AppLayout({ children }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  return (
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
+        <main className="flex-1 overflow-auto">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}
 
 function AppContent() {
-  const [backendStatus, setBackendStatus] = useState('checking')
-  const [backendInfo, setBackendInfo] = useState(null)
-
-  useEffect(() => {
-    checkBackend()
-  }, [])
-
-  async function checkBackend() {
-    const result = await healthCheck()
-    if (result.ok) {
-      setBackendStatus('connected')
-      setBackendInfo(result.data)
-    } else {
-      setBackendStatus('error')
-    }
-  }
-
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Islamou Dini</h1>
-        <p>Application avec Django Backend</p>
-      </header>
-
-      <main className="app-main">
-        <section className="status-card">
-          <h2>Status du Backend Django</h2>
-          
-          {backendStatus === 'checking' && (
-            <div className="status checking">
-              <span className="status-dot"></span>
-              Verification de la connexion...
-            </div>
-          )}
-          
-          {backendStatus === 'connected' && (
-            <div className="status connected">
-              <span className="status-dot"></span>
-              Backend connecte
-              {backendInfo && (
-                <pre className="backend-info">
-                  {JSON.stringify(backendInfo, null, 2)}
-                </pre>
-              )}
-            </div>
-          )}
-          
-          {backendStatus === 'error' && (
-            <div className="status error">
-              <span className="status-dot"></span>
-              Backend non disponible
-              <button onClick={checkBackend} className="retry-btn">
-                Reessayer
-              </button>
-            </div>
-          )}
-        </section>
-
-        <section className="api-info">
-          <h2>API Endpoints Django</h2>
-          <ul>
-            <li><code>GET /api/health/</code> - Health check</li>
-            <li><code>POST /api/auth/token/</code> - Login (JWT)</li>
-            <li><code>POST /api/auth/token/refresh/</code> - Refresh token</li>
-            <li><code>POST /api/users/register/</code> - Register</li>
-            <li><code>GET /api/users/me/</code> - Current user profile</li>
-            <li><code>PATCH /api/users/me/</code> - Update profile</li>
-            <li><code>PUT /api/users/change-password/</code> - Change password</li>
-            <li><code>GET /api/admin/</code> - Django Admin</li>
-          </ul>
-        </section>
-      </main>
-    </div>
-  )
+    <Routes>
+      {/* Public routes */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      
+      {/* Protected routes */}
+      <Route path="/" element={<AppLayout><HomePage /></AppLayout>} />
+      <Route path="/feed" element={<AppLayout><FeedPage /></AppLayout>} />
+      <Route path="/formations" element={<AppLayout><CatalogPage /></AppLayout>} />
+      <Route path="/formations/:id" element={<AppLayout><FormationDetailPage /></AppLayout>} />
+      <Route path="/communities" element={<AppLayout><CommunitiesPage /></AppLayout>} />
+      <Route path="/communities/:id" element={<AppLayout><CommunityPage /></AppLayout>} />
+      <Route path="/reels" element={<AppLayout><ReelsPage /></AppLayout>} />
+      <Route path="/profile" element={<ProtectedRoute><AppLayout><ProfilePage /></AppLayout></ProtectedRoute>} />
+      <Route path="/settings" element={<ProtectedRoute><AppLayout><SettingsPage /></AppLayout></ProtectedRoute>} />
+      <Route path="/admin" element={<AdminRoute><AppLayout><AdminPage /></AppLayout></AdminRoute>} />
+      
+      {/* 404 */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  );
 }
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  )
+    <Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </Router>
+  );
 }
 
-export default App
+export default App;

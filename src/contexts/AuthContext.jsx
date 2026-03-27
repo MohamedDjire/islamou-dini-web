@@ -44,34 +44,36 @@ export function AuthProvider({ children }) {
         if (profileResult.ok) {
           setUser(profileResult.data);
         }
-        return { success: true };
+        return true;
       } else {
         const message = data.detail || 'Email ou mot de passe incorrect';
         setError(message);
-        return { success: false, error: message };
+        return false;
       }
     } catch (err) {
       const message = err.message || 'Erreur de connexion';
       setError(message);
-      return { success: false, error: message };
+      return false;
     }
   }
 
-  async function register(userData) {
+  async function register(username, email, password) {
     setError(null);
     try {
-      const { ok, data } = await authApi.register(userData);
+      const { ok, data } = await authApi.register({ username, email, password });
       if (ok) {
-        return { success: true, data };
+        // Auto-login after registration
+        const loginResult = await login(email, password);
+        return loginResult;
       } else {
         const message = Object.values(data).flat().join(', ') || 'Erreur d\'inscription';
         setError(message);
-        return { success: false, error: message };
+        return false;
       }
     } catch (err) {
       const message = err.message || 'Erreur d\'inscription';
       setError(message);
-      return { success: false, error: message };
+      return false;
     }
   }
 
